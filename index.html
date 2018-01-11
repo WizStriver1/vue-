@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+	<div id="app">
+		<div class="container">
+			<table class="table table-striped">
+				<tr>
+					<th>ID</th>
+					<th>商品名</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>小计</th>
+					<th>操作</th>
+				</tr>
+				<tr v-for="(item, index) in order">
+					<td>{{index+1}}</td>
+					<td>{{item.name}}</td>
+					<td>{{item.price}}</td>
+					<td><span class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button" @click="subtract(index)"></span><input type="text" v-model="item.count"><span class="btn btn-default btn-xs glyphicon glyphicon glyphicon-plus" type="button" @click="add(index)"></span></td>
+					<td>{{item.price*item.count}}</td>
+					<td>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#layer" v-on:click="curcount=index">删除</button>
+					</td>
+				</tr>
+				<tr>
+					<td>总计</td>
+					<td colspan="4">12345</td>
+					<td>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#layer" v-if="order.length!=0" v-on:click="curcount=-2">全部删除</button>
+					</td>
+				</tr>
+			</table>
+			<div class="modal fade" id="layer" tabindex="-1" role="dialog">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title">Modal title</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p>选中的商品为：{{curcount}}</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="remove(curcount)">确认删除</button>
+			      </div>
+			    </div><!-- /.modal-content -->
+			  </div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="vue.min.js"></script>
+	<script>
+		var app = new Vue({
+			el: "#app",
+			data: {
+				order: [
+					{"name": "小米6", "price": 3400, "count": 2},
+					{"name": "小米5", "price": 3400, "count": 2},
+					{"name": "小米4", "price": 3400, "count": 2},
+					{"name": "iphoneX", "price": 8700, "count": 2},
+					{"name": "iphone8", "price": 5600, "count": 2},
+					{"name": "iphone7", "price": 4600, "count": 2}
+				],
+				curcount: 0,//将要删除的商品
+			},
+			methods: {
+				remove: function(n){
+					n == -2 ? this.order = [] : this.order.splice(n,1);
+				},
+				add: function(index){
+					this.order[index].count++;
+				},
+				subtract: function(index){
+					if(this.order[index].count<=1){
+						if(confirm("您确定删除该商品吗")){
+							this.order.splice(index,1);
+						}
+						return;
+					}
+					this.order[index].count--;
+				}
+			}
+		});
+	</script>
+</body>
+</html>
