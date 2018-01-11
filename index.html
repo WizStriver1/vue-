@@ -30,7 +30,7 @@
 				</tr>
 				<tr>
 					<td>总计</td>
-					<td colspan="4">12345</td>
+					<td colspan="4">{{ computePrice }}</td>
 					<td>
 						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#layer" v-if="order.length!=0" v-on:click="curcount=-2">全部删除</button>
 					</td>
@@ -73,6 +73,15 @@
 				],
 				curcount: 0,//将要删除的商品
 			},
+			computed: {
+				computePrice: function() {
+					var sum = 0;
+					for(var i = 0, sum = 0; i < this.order.length; i++) {
+						sum += this.order[i].price*this.order[i].count;
+					}
+					return sum;
+				}
+			},	
 			methods: {
 				remove: function(n){
 					n == -2 ? this.order = [] : this.order.splice(n,1);
@@ -88,6 +97,9 @@
 						return;
 					}
 					this.order[index].count--;
+				},
+				addProduct: function() {
+
 				}
 			}
 		});
