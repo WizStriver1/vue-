@@ -30,9 +30,12 @@
 				</tr>
 				<tr>
 					<td>总计</td>
-					<td colspan="4">{{ computePrice }}</td>
+					<td colspan="3">{{ totalPrice }}</td>
 					<td>
 						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#layer" v-if="order.length!=0" v-on:click="curcount=-2">全部删除</button>
+					</td>
+					<td>
+						<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">添加商品</button>
 					</td>
 				</tr>
 			</table>
@@ -53,6 +56,37 @@
 			    </div><!-- /.modal-content -->
 			  </div><!-- /.modal-dialog -->
 			</div><!-- /.modal -->
+
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="exampleModalLabel">添加商品</h4>
+			      </div>
+			      <div class="modal-body">
+			        <form>
+			          <div class="form-group">
+			            <label for="recipient-name" class="control-label">商品名:</label>
+			            <input type="text" class="form-control" id="recipient-name" v-model="productName">
+			          </div>
+			          <div class="form-group">
+			            <label for="recipient-name" class="control-label">单价:</label>
+			            <input type="text" class="form-control" id="recipient-name" v-model="productPrice">
+			          </div>
+			          <div class="form-group">
+			            <label for="recipient-name" class="control-label">数量:</label>
+			            <input type="text" class="form-control" id="recipient-name" v-model="productCount">
+			          </div>
+			        </form>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="addProduct()">确认添加</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -72,15 +106,31 @@
 					{"name": "iphone7", "price": 4600, "count": 2}
 				],
 				curcount: 0,//将要删除的商品
+				totalPrice: 0,
+				productName: "小米6",
+				productPrice: 3400,
+				productCount: 1,
+			},
+			watch: {
+				toCount: function() {
+					console.log("watch");
+				}
 			},
 			computed: {
-				computePrice: function() {
-					var sum = 0;
-					for(var i = 0, sum = 0; i < this.order.length; i++) {
-						sum += this.order[i].price*this.order[i].count;
-					}
-					return sum;
+				toCount: function() {
+					var _this = this;
+					this.totalPrice = 0;
+					this.order.forEach(function(o,i){
+						_this.totalPrice += (o.price * o.count);
+					});
 				}
+				// computePrice: function() {
+				// 	var sum = 0;
+				// 	for(var i = 0, sum = 0; i < this.order.length; i++) {
+				// 		sum += this.order[i].price*this.order[i].count;
+				// 	}
+				// 	return sum;
+				// }
 			},	
 			methods: {
 				remove: function(n){
@@ -99,7 +149,14 @@
 					this.order[index].count--;
 				},
 				addProduct: function() {
-
+					this.order.push({
+						name: this.productName,
+						price: this.productPrice,
+						count: this.productCount
+					});
+					this.productName = "小米6";
+					this.productPrice = 3400;
+					this.productCount = 1;
 				}
 			}
 		});
